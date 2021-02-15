@@ -115,9 +115,9 @@ async function publish(options) {
         }
       }
 
-      const fileName = file
-      const filePath = Path.resolve(tagDir, file)
-      const fileStat = await File.promises.stat(filePath)
+      const fileName    = file
+      const filePath    = Path.resolve(tagDir, file)
+      const fileContent = await File.promises.readFile(filePath)
 
       log("Staged file " + file + " found. Proceeding to upload it.");
       await client.repos.uploadReleaseAsset({
@@ -126,9 +126,9 @@ async function publish(options) {
         id: release.id,
         repo: repo,
         name: fileName,
-        file: File.createReadStream(filePath),
+        data: fileContent,
         contentType: Mime.contentType(fileName) || 'application/octet-stream',
-        contentLength: fileStat.size
+        contentLength: fileContent.length
       })
 
       log('Staged file ' + fileName + ' saved to ' + owner + '/' +  repo + ' release ' + release.tag_name + ' successfully.');
