@@ -12,7 +12,12 @@ Program
 		const opts = {};
 		opts.draft = options.release ? false : true;
 		opts.verbose = options.silent ? false : true;
-		Module.publish(opts);
+		try {
+			Module.publish(opts);
+		} catch (err) {
+			console.error(err)
+			process.exit(1)
+		}
 	});
 
 Program
